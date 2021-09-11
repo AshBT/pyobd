@@ -152,6 +152,7 @@ class OBDPort:
             self.send_command("0100")
             time.sleep(1)
             ready = self.get_result()[-1]
+            print(self.hex_to_bitstring(ready))
             print(ready)
             wx.PostEvent(self._notify_window, DebugEvent([2, "0100 response2:" + ready]))
             self.State = 1
@@ -209,6 +210,29 @@ class OBDPort:
                 count=count+1          
             """
 
+    def hex_to_bitstring(self, str):
+        bitstring = ""
+        for i in str:
+            # silly type safety, we don't want to eval random stuff
+            if type(i) == type(''):
+                v = eval("0x%s" % i)
+                if v & 8:
+                    bitstring += '1'
+                else:
+                    bitstring += '0'
+                if v & 4:
+                    bitstring += '1'
+                else:
+                    bitstring += '0'
+                if v & 2:
+                    bitstring += '1'
+                else:
+                    bitstring += '0'
+                if v & 1:
+                    bitstring += '1'
+                else:
+                    bitstring += '0'
+        return bitstring
     def __isok(self, lines, expectEcho=False):
         if not lines:
             return False
