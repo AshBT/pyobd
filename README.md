@@ -14,4 +14,4 @@ pip3 install pyserial
 
 The program is run by typing "python3 pyobd".
 
-It works but is still a work in progress. I will support it, do bugfixes, test it on Windows 10 also, and add new functionalities.
+It works but it is still a work in progress. I will support it, do bugfixes, test it on Windows 10 also, and add new functionalities.
