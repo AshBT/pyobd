@@ -12,7 +12,7 @@ On Debian 10 type these commands to install the requirements:
 
 > pip3 install wxpython==4.1.1
 
-> pip3 install pyserial
+> pip3 install pyserial==3.5
 
 The program is run by typing: 
 > python3 pyobd
