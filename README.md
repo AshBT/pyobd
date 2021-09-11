@@ -1,6 +1,6 @@
 # ![PYOBD](/pyobd.gif) PYOBD 
 
-This is my remake of program PYOBD. It also works on Python3 and all new libraries. It was tested on Debian 10 (Buster) on USB ELM327 1.3. You don't need any drivers for it on Linux, but you need Pyserial and WXPython.
+This is my remake of program PYOBD. It works on Python3 and all new libraries. It was tested on Debian 10 (Buster) on USB ELM327 1.3. You don't need any drivers for it on Linux, but you need Pyserial and WXPython.
 
 > pyOBD (aka pyOBD-II or pyOBD2) is an OBD-II compliant car diagnostic tool. It is designed to interface with low-cost ELM 32x OBD-II diagnostic interfaces such as ELM327. It will basically allow you to talk to your car's ECU,... display fault codes, display measured values, read status tests, etc. All cars made since 1996 (in the US) or 2001 (in the EU) must be OBD-II compliant, i.e. they should work with pyOBD.
 
