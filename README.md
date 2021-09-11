@@ -4,7 +4,7 @@ This is my port of program PYOBD to Python3. It also works on all new libraries.
 
 It was tested on Debian 10, Python 3, Pyserial (3.4 and 3.5), WXPython 4.1.1.
 
-![ELM327](/elm327.jpg)
+![ELM327](/elm327_2.jpg)
 
 On Debian 10 type these commands to install the requirements:
 
