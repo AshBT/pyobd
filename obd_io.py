@@ -153,7 +153,8 @@ class OBDPort:
             ready = self.get_result()[0]
             print(ready)
             wx.PostEvent(self._notify_window, DebugEvent([2, "0100 response2:" + ready]))
-            
+            self.State = 1
+            return None
             if "41 00 FE 3F B8 11" in ready:
                 self.State = 1
                 return None
