@@ -152,7 +152,7 @@ class OBDPort:
             self.send_command("0100")
             time.sleep(1)
             ready = self.get_result()[-1]
-            print(self.hex_to_bitstring(ready))
+            print(self.hex_to_bitstring(ready))  # if this fails, comment it
             print(ready)
             wx.PostEvent(self._notify_window, DebugEvent([2, "0100 response2:" + ready]))
             self.State = 1
