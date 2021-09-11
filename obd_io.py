@@ -127,14 +127,14 @@ class OBDPort:
                 print('atz failed')
                 self.State = 0
                 return None
-            self.ELMver = self.get_result()[0]
+            self.ELMver = self.get_result()[-1]
             print('ELM version '+self.ELMver)
             wx.PostEvent(self._notify_window, DebugEvent([2,"atz response:" + self.ELMver]))
             #print(self.get_result())
             
             self.send_command("ATE0")
             time.sleep(1)
-            print(self.get_result())
+            print(self.get_result()[-1])
             #self.send_command("ATH1")
             #time.sleep(1)
             #print(self.get_result())
@@ -150,7 +150,7 @@ class OBDPort:
             #print(self.get_result())
             self.send_command("0100")
             time.sleep(1)
-            ready = self.get_result()[0]
+            ready = self.get_result()[-1]
             print(ready)
             wx.PostEvent(self._notify_window, DebugEvent([2, "0100 response2:" + ready]))
             self.State = 1
