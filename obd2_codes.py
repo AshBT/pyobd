@@ -4,6 +4,7 @@
 #
 # Copyright 2004 Donour Sizemore (donour@uchicago.edu)
 # Copyright 2009 Secons Ltd. (www.obdtester.com)
+# Copyright 2021 Jure Poljsak (https://github.com/barracuda-fsh/pyobd)
 #
 # This file is part of pyOBD.
 #
