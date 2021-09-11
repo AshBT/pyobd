@@ -15,7 +15,7 @@ On Debian 10 type these commands to install the requirements:
 The program is run by typing: 
 > python3 pyobd
 
-The engine must be running before connecting, for the program to connect and work properly. It will connect if the engine is not running but the contact must be on. Without contact, the program will not connect to the ECU.
+The engine must be running before connecting, for the program to connect and display all the sensor data. It will connect if the engine is not running but the contact must be on. Without contact, the program will not connect to the ECU.
 
 The program works, but it is still a work in progress. I will support it, do bugfixes, test it on Windows 10 and add new functionalities.
 
