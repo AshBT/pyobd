@@ -469,17 +469,19 @@ class MyApp(wx.App):
         return True
 
     def OnHelpVisit(self,event):
-        webbrowser.open("http://www.obdtester.com/pyobd")
+        webbrowser.open("https://github.com/barracuda-fsh/pyobd")
     
     def OnHelpOrder(self,event):
-        webbrowser.open("http://www.obdtester.com/order")
+        webbrowser.open("https://www.google.com/search?q=elm327+obd2+scanner")
     
     def OnHelpAbout(self,event): #todo about box
         Text = """  PyOBD is an automotive OBD2 diagnosting application using ELM237 cable.
 
+(C) 2021 Jure Poljsak
 (C) 2008-2009 SeCons Ltd.
 (C) 2004 Charles Donour Sizemore
 
+https://github.com/barracuda-fsh/pyobd
 http://www.obdtester.com/
 http://www.secons.com/
 
@@ -559,7 +561,8 @@ the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  0211
     def CodeLookup(self,e = None):
         id = 0
         diag = wx.Frame(None, id, title="Diagnostic Trouble Codes")
-
+        ico = wx.Icon('pyobd.gif', wx.BITMAP_TYPE_GIF)
+        diag.SetIcon(ico)
         tree = wx.TreeCtrl(diag, id, style = wx.TR_HAS_BUTTONS)
 
         root = tree.AddRoot("Code Reference")
