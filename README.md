@@ -15,7 +15,7 @@ On Debian 10 type these commands to install the requirements:
 > pip3 install pyserial==3.5
 
 The program is run by typing: 
-> python3 pyobd
+> python3 pyobd.py
 
 The engine must be running before connecting, for the program to connect and display all the sensor data. It will connect if the engine is not running but the contact must be on. Without contact, the program will not connect to the ECU.
 
