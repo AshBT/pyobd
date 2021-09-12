@@ -136,40 +136,39 @@ class OBDPort:
             self.send_command("ATE0")
             time.sleep(1)
             print(self.get_result()[-1])
-            #self.send_command("ATH1")
-            #time.sleep(1)
-            #print(self.get_result())
-            #self.send_command("ATL0")
-            #time.sleep(1)
-            #print(self.get_result())
-            #self.send_command("AT RV")
-            #time.sleep(1)
-            #print(self.get_result())
-            #time.sleep(1)
-            #self.send_command("ATSP0")
-            #time.sleep(1)
-            #print(self.get_result())
+            
+            """
+            self.send_command("ATH1")
+            time.sleep(1)
+            print(self.get_result())
+            self.send_command("ATL0")
+            time.sleep(1)
+            print(self.get_result())
+            self.send_command("AT RV")
+            time.sleep(1)
+            print(self.get_result())
+            time.sleep(1)
+            """
+            self.send_command("ATSP0")
+            time.sleep(1)
+            print(self.get_result())
+            
+            
             self.send_command("0100")
             time.sleep(1)
             ready = self.get_result()[-1]
-            print(self.hex_to_bitstring(ready))  # if this fails, comment it
-            print(ready)
-            wx.PostEvent(self._notify_window, DebugEvent([2, "0100 response2:" + ready]))
-            self.State = 1
+            print(self.hex_to_bitstring(str(ready).replace(' ','')))  # if this fails, comment it
+            
             #return None
             if "41 00" in ready:
+                print('Print ready: ',ready)
+                wx.PostEvent(self._notify_window, DebugEvent([2, "0100 response2:" + ready]))
                 self.State = 1
                 wx.PostEvent(self._notify_window, DebugEvent([2, "Connection succeeded!"]))
                 return None
-            #elif "41 00 FE 3F B8 11" in ready:
-            #    self.State = 1
-            #    return None
-            #elif '86 F1 11 41 00 FE 3F B8 11 CF' in ready:
-            #    self.State = 1
-            #    return None
             else:
                 ready=ready[-5:] #Expecting error message: BUSINIT:.ERROR (parse last 5 chars)
-                wx.PostEvent(self._notify_window, DebugEvent([2, "Connection attempt failed:" + ready]))
+                wx.PostEvent(self._notify_window, DebugEvent([2, "Connection attempt failed:" , ready]))
                 time.sleep(5)
                 if count == RECONNATTEMPTS:
                     self.close()
