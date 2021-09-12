@@ -21,4 +21,4 @@ The engine must be running before connecting, for the program to connect and dis
 
 The program works, but it is still a work in progress. I will support it, do bugfixes, test it on Windows 10 and add new functionalities.
 
-![ELM327](/elm327_2.jpg)
+![ELM327](/elm327.jpg)
