@@ -2,6 +2,8 @@
 
 This is my remake of the program PYOBD. It works on Python3 and all new libraries. It was tested on Debian 10 (Buster) with USB ELM327 1.3 and on Windows10 with USB ELM327 1.5a. It probably works on Mac too. You don't need any drivers for it on Linux, but you need pyserial and wxPython. On Windows 10 you need driver for the ELM327 device and pyserial and wxPython.
 
+You can get Windows drivers for your USB ELM327 on this site: http://www.totalcardiagnostics.com/support/Knowledgebase/Article/View/1/0/how-to-install-elm327-usb-cable-on-windows-and-obd2-software
+
 > pyOBD (aka pyOBD-II or pyOBD2) is an OBD-II compliant car diagnostic tool. It is designed to interface with low-cost ELM 32x OBD-II diagnostic interfaces such as ELM327. It will basically allow you to talk to your car's ECU,... display fault codes, display measured values, read status tests, etc. All cars made since 1996 (in the US) or 2001 (in the EU) must be OBD-II compliant, i.e. they should work with pyOBD.
 
 ### Video presentation on YouTube(click on it):
