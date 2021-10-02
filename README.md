@@ -17,6 +17,8 @@ On Debian 10 type these commands to install the requirements:
 
 > pip3 install pyserial==3.5
 
+> pip3 install obd==0.7.1
+
 The program is run by typing: 
 > python3 pyobd.py
 
