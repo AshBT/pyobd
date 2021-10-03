@@ -26,6 +26,10 @@
 
 # import wxversion
 # wxversion.select("2.6")
+import matplotlib.pyplot as plt
+#import matplotlib.animation as animation
+#from matplotlib import style
+
 import wx
 import pdb
 import obd_io  # OBD2 funcs
@@ -240,6 +244,15 @@ class MyApp(wx.App):
             #build_sensor_page()
 
             #pdb.set_trace()
+
+            app.tps.InsertColumn(0, obd.commands[1][11].command, width=40)
+            app.tps.InsertColumn(1, obd.commands[1][11].desc, width=200)
+            app.tps.InsertColumn(2, "")
+
+            app.maf.InsertColumn(0, obd.commands[1][10].command, width=40)
+            app.maf.InsertColumn(1, obd.commands[1][10].desc, width=200)
+            app.maf.InsertColumn(2, "")
+
             first_time = True
             while self._notify_window.ThreadControl != 666:
                 prevstate = curstate
@@ -252,7 +265,7 @@ class MyApp(wx.App):
                     #for val in dir(r.value):
                     #    print (val.available)
                     #    print (val.complete)
-                    
+
                     wx.PostEvent(self._notify_window, TestEvent([0, 1, str(r.value.MISFIRE_MONITORING.available)]))
                     wx.PostEvent(self._notify_window, TestEvent([0, 2, str(r.value.MISFIRE_MONITORING.complete)]))
                     wx.PostEvent(self._notify_window, TestEvent([1, 1, str(r.value.FUEL_SYSTEM_MONITORING.available)]))
@@ -400,6 +413,65 @@ class MyApp(wx.App):
                                          DTCEvent([DTCCodes[i][0], DTCCodes[i][1], DTCCodes[i][2]]))
 
                         pass
+                if curstate == 4:  # show TPS tab
+                    style.use('fivethirtyeight')
+                    plt.ion()
+                    fig = plt.figure()
+                    x_axis_start = 0
+                    x_axis_end = 100
+                    plt.axis([x_axis_start, x_axis_end, 0, 105])
+                    counter = 0
+                    xa = []
+                    ya = []
+                    while self._nb.GetSelection() == 4:
+                        s = self.connection.connection.query(command[1][11])
+                        app.tps.SetItem(0, 2, str(s.value))
+                        xa.append(float(counter))
+                        ya.append(float(s.value.magnitude))
+                        if len(xa) == 2:
+                            plt.plot(xa, ya, color="blue", linewidth=1)
+                            plt.draw()
+                            #plt.pause(0.0001)
+                            xa = []
+                            ya = []
+                            xa.append(counter)
+                            ya.append(float(yyy))
+                        if counter % 100 == 0 and counter > 1:
+                            x_axis_start += 100
+                            x_axis_end += 100
+                            plt.axis([x_axis_start, x_axis_end, 0, 105])
+                        counter = counter + 1
+                    plt.close()
+
+                if curstate == 5:  # show MAF tab
+                    style.use('fivethirtyeight')
+                    plt.ion()
+                    fig = plt.figure()
+                    x_axis_start = 0
+                    x_axis_end = 100
+                    plt.axis([x_axis_start, x_axis_end, 0, 105])
+                    counter = 0
+                    xa = []
+                    ya = []
+                    while self._nb.GetSelection() == 4:
+                        s = self.connection.connection.query(command[1][10])
+                        app.maf.SetItem(0, 2, str(s.value))
+                        xa.append(float(counter))
+                        ya.append(float(s.value.magnitude))
+                        if len(xa) == 2:
+                            plt.plot(xa, ya, color="blue", linewidth=1)
+                            plt.draw()
+                            # plt.pause(0.0001)
+                            xa = []
+                            ya = []
+                            xa.append(counter)
+                            ya.append(float(yyy))
+                        if counter % 100 == 0 and counter > 1:
+                            x_axis_start += 100
+                            x_axis_end += 100
+                            plt.axis([x_axis_start, x_axis_end, 0, 105])
+                        counter = counter + 1
+                    plt.close()
                 else:
                     pass
             self.stop()
@@ -698,7 +770,7 @@ class MyApp(wx.App):
 
         frame.Show(True)
         frame.SetSize((520, 400))
-        #self.sensor_control_off()
+        self.sensor_control_off() # ??? JURE POLJSAK
 
         return True
 
