@@ -27,10 +27,10 @@ import multiprocessing
 from multiprocessing import Queue, Process
 # import wxversion
 # wxversion.select("2.6")
-import matplotlib
-import matplotlib.pyplot as plt
+#import matplotlib
+#import matplotlib.pyplot as plt
 
-from matplotlib import style
+#from matplotlib import style
 import traceback
 import wx
 import pdb
@@ -699,11 +699,18 @@ class MyApp(wx.App):
             self.BAUDRATE = "AUTO"
             self.FAST = "FAST"
         else:
-            self.COMPORT = self.config.get("pyOBD", "COMPORT")
-            self.RECONNATTEMPTS = self.config.getint("pyOBD", "RECONNATTEMPTS")
-            self.SERTIMEOUT = self.config.get("pyOBD", "SERTIMEOUT")
-            self.BAUDRATE = self.config.get("pyOBD", "BAUDRATE")
-            self.FAST = self.config.get("pyOBD", "FAST")
+            try:
+                self.COMPORT = self.config.get("pyOBD", "COMPORT")
+                self.RECONNATTEMPTS = self.config.getint("pyOBD", "RECONNATTEMPTS")
+                self.SERTIMEOUT = self.config.get("pyOBD", "SERTIMEOUT")
+                self.BAUDRATE = self.config.get("pyOBD", "BAUDRATE")
+                self.FAST = self.config.get("pyOBD", "FAST")
+            except:
+                self.COMPORT = "/dev/ttyACM0"
+                self.RECONNATTEMPTS = 5
+                self.SERTIMEOUT = 1
+                self.BAUDRATE = "AUTO"
+                self.FAST = "FAST"
 
         frame = wx.Frame(None, -1, "pyOBD-II")
         self.frame = frame
