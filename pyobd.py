@@ -232,8 +232,42 @@ class MyApp(wx.App):
 
 
             def build_tests_page():
-                for t in TESTS:
-                    app.OBDTests.Append([t, "---", "---"])
+                r = self.connection.connection.query(obd.commands[1][1])
+                if r.value.MISFIRE_MONITORING.available:
+                    app.OBDTests.Append(["MISFIRE_MONITORING", "---", "---"])
+                if r.value.FUEL_SYSTEM_MONITORING.available:
+                    app.OBDTests.Append(["FUEL_SYSTEM_MONITORING", "---", "---"])
+                if r.value.COMPONENT_MONITORING.available:
+                    app.OBDTests.Append(["COMPONENT_MONITORING", "---", "---"])
+                if r.value.CATALYST_MONITORING.available:
+                    app.OBDTests.Append(["CATALYST_MONITORING", "---", "---"])
+                if r.value.HEATED_CATALYST_MONITORING.available:
+                    app.OBDTests.Append(["HEATED_CATALYST_MONITORING", "---", "---"])
+                if r.value.EVAPORATIVE_SYSTEM_MONITORING.available:
+                    app.OBDTests.Append(["EVAPORATIVE_SYSTEM_MONITORING", "---", "---"])
+                if r.value.SECONDARY_AIR_SYSTEM_MONITORING.available:
+                    app.OBDTests.Append(["SECONDARY_AIR_SYSTEM_MONITORING", "---", "---"])
+                if r.value.OXYGEN_SENSOR_MONITORING.available:
+                    app.OBDTests.Append(["OXYGEN_SENSOR_MONITORING", "---", "---"])
+                if r.value.OXYGEN_SENSOR_HEATER_MONITORING.available:
+                    app.OBDTests.Append(["OXYGEN_SENSOR_HEATER_MONITORING", "---", "---"])
+                if r.value.EGR_VVT_SYSTEM_MONITORING.available:
+                    app.OBDTests.Append(["EGR_VVT_SYSTEM_MONITORING", "---", "---"])
+                if r.value.NMHC_CATALYST_MONITORING.available:
+                    app.OBDTests.Append(["NMHC_CATALYST_MONITORING", "---", "---"])
+                if r.value.NOX_SCR_AFTERTREATMENT_MONITORING.available:
+                    app.OBDTests.Append(["NOX_SCR_AFTERTREATMENT_MONITORING", "---", "---"])
+                if r.value.BOOST_PRESSURE_MONITORING.available:
+                    app.OBDTests.Append(["BOOST_PRESSURE_MONITORING", "---", "---"])
+                if r.value.EXHAUST_GAS_SENSOR_MONITORING.available:
+                    app.OBDTests.Append(["EXHAUST_GAS_SENSOR_MONITORING", "---", "---"])
+                if r.value.PM_FILTER_MONITORING.available:
+                    app.OBDTests.Append(["PM_FILTER_MONITORING", "---", "---"])
+
+
+
+                #for t in TESTS:
+                #    app.OBDTests.Append([t, "---", "---"])
 
 
 
@@ -265,37 +299,51 @@ class MyApp(wx.App):
                     #for val in dir(r.value):
                     #    print (val.available)
                     #    print (val.complete)
-
-                    wx.PostEvent(self._notify_window, TestEvent([0, 1, str(r.value.MISFIRE_MONITORING.available)]))
-                    wx.PostEvent(self._notify_window, TestEvent([0, 2, str(r.value.MISFIRE_MONITORING.complete)]))
-                    wx.PostEvent(self._notify_window, TestEvent([1, 1, str(r.value.FUEL_SYSTEM_MONITORING.available)]))
-                    wx.PostEvent(self._notify_window, TestEvent([1, 2, str(r.value.FUEL_SYSTEM_MONITORING.complete)]))
-                    wx.PostEvent(self._notify_window, TestEvent([2, 1, str(r.value.COMPONENT_MONITORING.available)]))
-                    wx.PostEvent(self._notify_window, TestEvent([2, 2, str(r.value.COMPONENT_MONITORING.complete)]))
-                    wx.PostEvent(self._notify_window, TestEvent([3, 1, str(r.value.CATALYST_MONITORING.available)]))
-                    wx.PostEvent(self._notify_window, TestEvent([3, 2, str(r.value.CATALYST_MONITORING.complete)]))
-                    wx.PostEvent(self._notify_window, TestEvent([4, 1, str(r.value.HEATED_CATALYST_MONITORING.available)]))
-                    wx.PostEvent(self._notify_window, TestEvent([4, 2, str(r.value.HEATED_CATALYST_MONITORING.complete)]))
-                    wx.PostEvent(self._notify_window, TestEvent([5, 1, str(r.value.EVAPORATIVE_SYSTEM_MONITORING.available)]))
-                    wx.PostEvent(self._notify_window, TestEvent([5, 2, str(r.value.EVAPORATIVE_SYSTEM_MONITORING.complete)]))
-                    wx.PostEvent(self._notify_window, TestEvent([6, 1, str(r.value.SECONDARY_AIR_SYSTEM_MONITORING.available)]))
-                    wx.PostEvent(self._notify_window, TestEvent([6, 2, str(r.value.SECONDARY_AIR_SYSTEM_MONITORING.complete)]))
-                    wx.PostEvent(self._notify_window, TestEvent([7, 1, str(r.value.OXYGEN_SENSOR_MONITORING.available)]))
-                    wx.PostEvent(self._notify_window, TestEvent([7, 2, str(r.value.OXYGEN_SENSOR_MONITORING.complete)]))
-                    wx.PostEvent(self._notify_window, TestEvent([8, 1, str(r.value.OXYGEN_SENSOR_HEATER_MONITORING.available)]))
-                    wx.PostEvent(self._notify_window, TestEvent([8, 2, str(r.value.OXYGEN_SENSOR_HEATER_MONITORING.complete)]))
-                    wx.PostEvent(self._notify_window, TestEvent([9, 1, str(r.value.EGR_VVT_SYSTEM_MONITORING.available)]))
-                    wx.PostEvent(self._notify_window, TestEvent([9, 2, str(r.value.EGR_VVT_SYSTEM_MONITORING.complete)]))
-                    wx.PostEvent(self._notify_window, TestEvent([10, 1, str(r.value.NMHC_CATALYST_MONITORING.available)]))
-                    wx.PostEvent(self._notify_window, TestEvent([10, 2, str(r.value.NMHC_CATALYST_MONITORING.complete)]))
-                    wx.PostEvent(self._notify_window, TestEvent([11, 1, str(r.value.NOX_SCR_AFTERTREATMENT_MONITORING.available)]))
-                    wx.PostEvent(self._notify_window, TestEvent([11, 2, str(r.value.NOX_SCR_AFTERTREATMENT_MONITORING.complete)]))
-                    wx.PostEvent(self._notify_window, TestEvent([12, 1, str(r.value.BOOST_PRESSURE_MONITORING.available)]))
-                    wx.PostEvent(self._notify_window, TestEvent([12, 2, str(r.value.BOOST_PRESSURE_MONITORING.complete)]))
-                    wx.PostEvent(self._notify_window, TestEvent([13, 1, str(r.value.EXHAUST_GAS_SENSOR_MONITORING.available)]))
-                    wx.PostEvent(self._notify_window, TestEvent([13, 2, str(r.value.EXHAUST_GAS_SENSOR_MONITORING.complete)]))
-                    wx.PostEvent(self._notify_window, TestEvent([14, 1, str(r.value.PM_FILTER_MONITORING.available)]))
-                    wx.PostEvent(self._notify_window, TestEvent([14, 2, str(r.value.PM_FILTER_MONITORING.complete)]))
+                    if r.value.MISFIRE_MONITORING.available:
+                        wx.PostEvent(self._notify_window, TestEvent([0, 1, str(r.value.MISFIRE_MONITORING.available)]))
+                        wx.PostEvent(self._notify_window, TestEvent([0, 2, str(r.value.MISFIRE_MONITORING.complete)]))
+                    if r.value.FUEL_SYSTEM_MONITORING.available:
+                        wx.PostEvent(self._notify_window, TestEvent([1, 1, str(r.value.FUEL_SYSTEM_MONITORING.available)]))
+                        wx.PostEvent(self._notify_window, TestEvent([1, 2, str(r.value.FUEL_SYSTEM_MONITORING.complete)]))
+                    if r.value.COMPONENT_MONITORING.available:
+                        wx.PostEvent(self._notify_window, TestEvent([2, 1, str(r.value.COMPONENT_MONITORING.available)]))
+                        wx.PostEvent(self._notify_window, TestEvent([2, 2, str(r.value.COMPONENT_MONITORING.complete)]))
+                    if r.value.CATALYST_MONITORING.available:
+                        wx.PostEvent(self._notify_window, TestEvent([3, 1, str(r.value.CATALYST_MONITORING.available)]))
+                        wx.PostEvent(self._notify_window, TestEvent([3, 2, str(r.value.CATALYST_MONITORING.complete)]))
+                    if r.value.HEATED_CATALYST_MONITORING.available:
+                        wx.PostEvent(self._notify_window, TestEvent([4, 1, str(r.value.HEATED_CATALYST_MONITORING.available)]))
+                        wx.PostEvent(self._notify_window, TestEvent([4, 2, str(r.value.HEATED_CATALYST_MONITORING.complete)]))
+                    if r.value.EVAPORATIVE_SYSTEM_MONITORING.available:
+                        wx.PostEvent(self._notify_window, TestEvent([5, 1, str(r.value.EVAPORATIVE_SYSTEM_MONITORING.available)]))
+                        wx.PostEvent(self._notify_window, TestEvent([5, 2, str(r.value.EVAPORATIVE_SYSTEM_MONITORING.complete)]))
+                    if r.value.SECONDARY_AIR_SYSTEM_MONITORING.available:
+                        wx.PostEvent(self._notify_window, TestEvent([6, 1, str(r.value.SECONDARY_AIR_SYSTEM_MONITORING.available)]))
+                        wx.PostEvent(self._notify_window, TestEvent([6, 2, str(r.value.SECONDARY_AIR_SYSTEM_MONITORING.complete)]))
+                    if r.value.OXYGEN_SENSOR_MONITORING.available:
+                        wx.PostEvent(self._notify_window, TestEvent([7, 1, str(r.value.OXYGEN_SENSOR_MONITORING.available)]))
+                        wx.PostEvent(self._notify_window, TestEvent([7, 2, str(r.value.OXYGEN_SENSOR_MONITORING.complete)]))
+                    if r.value.OXYGEN_SENSOR_HEATER_MONITORING.available:
+                        wx.PostEvent(self._notify_window, TestEvent([8, 1, str(r.value.OXYGEN_SENSOR_HEATER_MONITORING.available)]))
+                        wx.PostEvent(self._notify_window, TestEvent([8, 2, str(r.value.OXYGEN_SENSOR_HEATER_MONITORING.complete)]))
+                    if r.value.EGR_VVT_SYSTEM_MONITORING.available:
+                        wx.PostEvent(self._notify_window, TestEvent([9, 1, str(r.value.EGR_VVT_SYSTEM_MONITORING.available)]))
+                        wx.PostEvent(self._notify_window, TestEvent([9, 2, str(r.value.EGR_VVT_SYSTEM_MONITORING.complete)]))
+                    if r.value.NMHC_CATALYST_MONITORING.available:
+                        wx.PostEvent(self._notify_window, TestEvent([10, 1, str(r.value.NMHC_CATALYST_MONITORING.available)]))
+                        wx.PostEvent(self._notify_window, TestEvent([10, 2, str(r.value.NMHC_CATALYST_MONITORING.complete)]))
+                    if r.value.NOX_SCR_AFTERTREATMENT_MONITORING.available:
+                        wx.PostEvent(self._notify_window, TestEvent([11, 1, str(r.value.NOX_SCR_AFTERTREATMENT_MONITORING.available)]))
+                        wx.PostEvent(self._notify_window, TestEvent([11, 2, str(r.value.NOX_SCR_AFTERTREATMENT_MONITORING.complete)]))
+                    if r.value.BOOST_PRESSURE_MONITORING.available:
+                        wx.PostEvent(self._notify_window, TestEvent([12, 1, str(r.value.BOOST_PRESSURE_MONITORING.available)]))
+                        wx.PostEvent(self._notify_window, TestEvent([12, 2, str(r.value.BOOST_PRESSURE_MONITORING.complete)]))
+                    if r.value.EXHAUST_GAS_SENSOR_MONITORING.available:
+                        wx.PostEvent(self._notify_window, TestEvent([13, 1, str(r.value.EXHAUST_GAS_SENSOR_MONITORING.available)]))
+                        wx.PostEvent(self._notify_window, TestEvent([13, 2, str(r.value.EXHAUST_GAS_SENSOR_MONITORING.complete)]))
+                    if r.value.PM_FILTER_MONITORING.available:
+                        wx.PostEvent(self._notify_window, TestEvent([14, 1, str(r.value.PM_FILTER_MONITORING.available)]))
+                        wx.PostEvent(self._notify_window, TestEvent([14, 2, str(r.value.PM_FILTER_MONITORING.complete)]))
 
                     """
                     "MISFIRE_MONITORING",
