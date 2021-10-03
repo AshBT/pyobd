@@ -23,13 +23,15 @@
 # along with pyOBD; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ############################################################################
-
+import multiprocessing
+from multiprocessing import Queue, Process
 # import wxversion
 # wxversion.select("2.6")
+import matplotlib
 import matplotlib.pyplot as plt
-import matplotlib.animation as animation
-from matplotlib import style
 
+from matplotlib import style
+import traceback
 import wx
 import pdb
 import obd_io  # OBD2 funcs
@@ -44,6 +46,8 @@ import platform
 import time
 import configparser  # safe application configuration
 import webbrowser  # open browser from python
+#from multiprocessing import Process
+#from multiprocessing import Queue
 
 from obd2_codes import pcodes
 from obd2_codes import ptest
@@ -251,43 +255,21 @@ class MyApp(wx.App):
 
 
             def build_tests_page():
-                r = self.connection.connection.query(obd.commands[1][1])
-
                 app.OBDTests.Append(["MISFIRE_MONITORING", "---", "---"])
-
                 app.OBDTests.Append(["FUEL_SYSTEM_MONITORING", "---", "---"])
-
                 app.OBDTests.Append(["COMPONENT_MONITORING", "---", "---"])
-
                 app.OBDTests.Append(["CATALYST_MONITORING", "---", "---"])
-
                 app.OBDTests.Append(["HEATED_CATALYST_MONITORING", "---", "---"])
-
                 app.OBDTests.Append(["EVAPORATIVE_SYSTEM_MONITORING", "---", "---"])
-
                 app.OBDTests.Append(["SECONDARY_AIR_SYSTEM_MONITORING", "---", "---"])
-
                 app.OBDTests.Append(["OXYGEN_SENSOR_MONITORING", "---", "---"])
-
                 app.OBDTests.Append(["OXYGEN_SENSOR_HEATER_MONITORING", "---", "---"])
-
                 app.OBDTests.Append(["EGR_VVT_SYSTEM_MONITORING", "---", "---"])
-
                 app.OBDTests.Append(["NMHC_CATALYST_MONITORING", "---", "---"])
-
                 app.OBDTests.Append(["NOX_SCR_AFTERTREATMENT_MONITORING", "---", "---"])
-
                 app.OBDTests.Append(["BOOST_PRESSURE_MONITORING", "---", "---"])
-
                 app.OBDTests.Append(["EXHAUST_GAS_SENSOR_MONITORING", "---", "---"])
-
                 app.OBDTests.Append(["PM_FILTER_MONITORING", "---", "---"])
-
-
-
-                #for t in TESTS:
-                #    app.OBDTests.Append([t, "---", "---"])
-
 
 
             #app.build_DTC_page()
@@ -308,7 +290,9 @@ class MyApp(wx.App):
             app.maf.InsertColumn(2, "Value")
             app.maf.InsertItem(0, "")
 
-            first_time = True
+            first_time_sensors = True
+            first_time_maf = True
+            first_time_tps = True
             while self._notify_window.ThreadControl != 666:
                 prevstate = curstate
                 curstate = self._nb.GetSelection()  # picking the tab in the GUI
@@ -408,13 +392,13 @@ class MyApp(wx.App):
                                 
                     """
 
-                    if first_time:
+                    if first_time_sensors:
                         sensor_list = []
                         counter = 0
-                        first_time = False
+                        first_time_sensors = False
                         for command in obd.commands[1]:
                             if command:
-                                if command.command[:2] == b"01" and command.command != b"0100" and command.command != b"0101":
+                                if command.command[:2] == b"01" and command.command != b"0100" and command.command != b"0101" and command.command != b"0102" and command.command != b"0113" and command.command != b"0120" and command.command != b"0121":
                                     s = self.connection.connection.query(command)
                                     if s.value == None:
                                         continue
@@ -425,9 +409,6 @@ class MyApp(wx.App):
                                         wx.PostEvent(self._notify_window, ResultEvent([counter, 0, str(command.command)]))
                                         wx.PostEvent(self._notify_window, ResultEvent([counter, 1, str(command.desc)]))
                                         wx.PostEvent(self._notify_window, ResultEvent([counter, 2, str(s.value)]))
-                                        #app.sensors.SetItem(counter, 0, command.command)
-                                        #app.sensors.SetItem(counter, 1, command.desc)
-                                        #app.sensors.SetItem(counter, 2, str(s.value))
                                         counter = counter + 1
                     else:
                         #for i in range(0, app.sensors.GetItemCount()):
@@ -438,10 +419,6 @@ class MyApp(wx.App):
                                 if command.command == sens[0]:
                                     s = self.connection.connection.query(command)
                                     sensor_list[counter] = [command.command, command.desc, str(s.value)]
-                                    #app.sensors.SetItem(counter, 2, str(s.value))
-                                    #wx.PostEvent(self._notify_window, ResultEvent([counter, 0, str(command.command)]))
-                                    #wx.PostEvent(self._notify_window, ResultEvent([counter, 1, str(command.desc)]))
-                                    #wx.PostEvent(self._notify_window, ResultEvent([counter, 2, str(s.value)]))
                                     counter = counter + 1
                         counter = 0
                         for sens in sensor_list:
@@ -483,85 +460,59 @@ class MyApp(wx.App):
 
                         pass
                 if curstate == 4:  # show TPS tab
+
                     s = self.connection.connection.query(obd.commands[1][17])
                     wx.PostEvent(self._notify_window, TPSEvent([0, 0, obd.commands[1][17].command]))
                     wx.PostEvent(self._notify_window, TPSEvent([0, 1, obd.commands[1][17].desc]))
                     wx.PostEvent(self._notify_window, TPSEvent([0, 2, str(s.value)]))
-                    """
-                    style.use('fivethirtyeight')
-                    plt.ion()
-                    #fig = plt.figure()
-                    x_axis_start = 0
-                    x_axis_end = 100
-                    plt.axis([x_axis_start, x_axis_end, 0, 105])
-                    counter = 0
-                    xa = []
-                    ya = []
-                    while self._nb.GetSelection() == 4:
-                        s = self.connection.connection.query(obd.commands[1][17])
-                        wx.PostEvent(self._notify_window, TPSEvent([0, 0, obd.commands[1][17].command]))
-                        wx.PostEvent(self._notify_window, TPSEvent([0, 1, obd.commands[1][17].desc]))
-                        wx.PostEvent(self._notify_window, TPSEvent([0, 2, str(s.value)]))
-                        xa.append(float(counter))
-                        ya.append(float(s.value.magnitude))
-                        if len(xa) == 2:
-                            plt.plot(xa, ya, color="blue", linewidth=1)
-                            plt.draw()
-                            #plt.pause(0.0001)
-                            xa = []
-                            ya = []
-                            xa.append(counter)
-                            ya.append(float(s.value.magnitude))
-                        if counter % 100 == 0 and counter > 1:
-                            x_axis_start += 100
-                            x_axis_end += 100
-                            plt.axis([x_axis_start, x_axis_end, 0, 105])
-                        counter = counter + 1
-                    plt.close()
-                    """
 
                 if curstate == 5:  # show MAF tab
+                    """
+                    try:
+                        q
+                        p
+                    except:
+                        #first_time_maf = False
+                        q = Queue()
+                        def maf_graph(q):
+                            name = multiprocessing.current_process().name
+                            style.use('fivethirtyeight')
+                            plt.ion()
+                            #fig = plt.figure()
+                            x_axis_start = 0
+                            x_axis_end = 100
+                            plt.axis([x_axis_start, x_axis_end, 0, 200])
+                            counter = 0
+                            xa = []
+                            ya = []
+                            while True:
+                                yyy = q.get()
+                                xa.append(float(counter))
+                                ya.append(float(yyy))
+                                if len(xa) == 2:
+                                    plt.plot(xa, ya, color="blue", linewidth=1)
+                                    plt.draw()
+                                    # plt.pause(0.0001)
+                                    xa = []
+                                    ya = []
+                                    xa.append(counter)
+                                    ya.append(float(yyy))
+                                if counter % 100 == 0 and counter > 1:
+                                    x_axis_start += 100
+                                    x_axis_end += 100
+                                    plt.axis([x_axis_start, x_axis_end, 0, 105])
+                                counter = counter + 1
+                            plt.close()
+                        p = Process(name="maf",target=maf_graph, args=(q,))
+                        p.start()
+                        #p.join()
+                    """
                     s = self.connection.connection.query(obd.commands[1][16])
-                    #app.maf.SetItem(0, 0, obd.commands[1][16].command)
-                    #app.maf.SetItem(0, 1, obd.commands[1][16].desc)
-                    #app.maf.SetItem(0, 2, str(s.value))
                     wx.PostEvent(self._notify_window, MAFEvent([0, 0, obd.commands[1][16].command]))
                     wx.PostEvent(self._notify_window, MAFEvent([0, 1, obd.commands[1][16].desc]))
                     wx.PostEvent(self._notify_window, MAFEvent([0, 2, str(s.value)]))
+                    #q.put(s.value.magnitude)
 
-                    #time.sleep(0.0001)
-                    """
-                    style.use('fivethirtyeight')
-                    plt.ion()
-                    #fig = plt.figure()
-                    x_axis_start = 0
-                    x_axis_end = 100
-                    plt.axis([x_axis_start, x_axis_end, 0, 105])
-                    counter = 0
-                    xa = []
-                    ya = []
-                    while self._nb.GetSelection() == 4:
-                        s = self.connection.connection.query(obd.commands[1][10])
-                        app.maf.SetItem(0, 2, str(s.value))
-                        xa.append(float(counter))
-                        ya.append(float(s.value.magnitude))
-                        if len(xa) == 2:
-                            plt.plot(xa, ya, color="blue", linewidth=1)
-                            plt.draw()
-                            # plt.pause(0.0001)
-                            xa = []
-                            ya = []
-                            xa.append(counter)
-                            ya.append(float(yyy))
-                        if counter % 100 == 0 and counter > 1:
-                            x_axis_start += 100
-                            x_axis_end += 100
-                            plt.axis([x_axis_start, x_axis_end, 0, 105])
-                        counter = counter + 1
-                    plt.close()
-                    """
-                    #s = self.connection.connection.query(obd.commands[1][10])
-                    #app.maf.SetItem(0, 2, str(s.value))
                 else:
                     pass
             self.stop()
@@ -628,19 +579,20 @@ class MyApp(wx.App):
                 self.senprod.off(sel)
                 self.sensors.SetItem(sel,1,"0")
             else:
-                debug("Incorrect sensor state")
+                traceback.print_exc()
+                #debug("Incorrect sensor state")
         
         self.sensors.Bind(wx.EVT_LIST_ITEM_ACTIVATED,sensor_toggle,id=self.sensor_id)                
 
 
-    def sensor_control_off(self):  # after disconnect disable fer buttons
+    def sensor_control_off(self):  # after disconnect disable few buttons
         self.dtcmenu.Enable(ID_GETC, False)
         self.dtcmenu.Enable(ID_CLEAR, False)
         self.settingmenu.Enable(ID_DISCONNECT, False)
         self.settingmenu.Enable(ID_CONFIG, True)
         self.settingmenu.Enable(ID_RESET, True)
-        #self.GetDTCButton.Enable(False)
-        #self.ClearDTCButton.Enable(False)
+        self.GetDTCButton.Enable(False)
+        self.ClearDTCButton.Enable(False)
         # http://pyserial.sourceforge.net/                                                    empty function
         # EVT_LIST_ITEM_ACTIVATED(self.sensors,self.sensor_id, lambda : None)
 
@@ -664,14 +616,6 @@ class MyApp(wx.App):
         self.sensors.InsertColumn(0, "PID", width=70)
         self.sensors.InsertColumn(1, "Sensor", format=wx.LIST_FORMAT_RIGHT, width=200)
         self.sensors.InsertColumn(2, "Value")
-
-
-        # for i in range(0, len(obd_io.obd_sensors.SENSORS)):
-        #    s = obd_io.obd_sensors.SENSORS[i].name
-        #    #self.sensors.InsertStringItem(i, "")
-        #    self.sensors.InsertItem(i, "")
-        #    #self.sensors.SetStringItem(i, 1, s)
-        #    self.sensors.SetItem(i, 1, s)
 
         ####################################################################
         # This little bit of magic keeps the list the same size as the frame
