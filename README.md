@@ -1,6 +1,6 @@
 # ![PYOBD](/pyobd.gif) PYOBD 
 
-This is the remake of the program PYOBD. It works on Python3 and all new libraries. It was tested on Linux, Windows, and it should work on MAC too. You just need an ELM327 USB or bluetooth device.
+This is the remake of the program PYOBD. It works on Python3 and all new libraries. It was tested on Linux, Windows, and it should work on MAC too. You just need an ELM327 USB or bluetooth device and a PC(laptop preferably).
 
 NOTE: On Windows you will need a suitable driver for your ELM327 device(on Linux it is not needed). You can download drivers from here:  http://www.totalcardiagnostics.com/support/Knowledgebase/Article/View/1/0/how-to-install-elm327-usb-cable-on-windows-and-obd2-software
 
